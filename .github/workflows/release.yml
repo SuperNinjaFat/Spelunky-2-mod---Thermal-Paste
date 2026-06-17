@@ -1,0 +1,37 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      RELEASE_ZIP_NAME: Mod_Jam_2_-_Thermal_Paste_${{ github.ref_name }}.zip
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Remove development related files
+        run: |
+          rm -rf .git
+          rm -rf .github
+          rm -f .gitignore
+
+      - name: Create release zip
+        run: |
+          zip -r ${{ env.RELEASE_ZIP_NAME }} .
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.RELEASE_ZIP_NAME }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
