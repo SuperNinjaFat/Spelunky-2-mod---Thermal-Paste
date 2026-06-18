@@ -23,6 +23,7 @@ jobs:
           rm -rf .git
           rm -rf .github
           rm -f .gitignore
+          rm -f .gitattributes
 
       - name: Create release zip
         run: |
